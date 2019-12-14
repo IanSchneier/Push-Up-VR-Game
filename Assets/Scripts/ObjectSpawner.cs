@@ -9,7 +9,8 @@ public class ObjectSpawner : MonoBehaviour
 
     public float timeMin = 3f;
     public float timeMax = 7f;
-    public float Scale = 10f;
+    public float Scale = 4f;
+    public float Offset = 0;
 
     // Use this for initialization
     void Start()
@@ -23,8 +24,8 @@ public class ObjectSpawner : MonoBehaviour
         if (StateMachine.GameState())
         { 
             //random y position
-            float y = Random.Range(-SpawnObject.transform.localScale.y * Scale, SpawnObject.transform.localScale.y * Scale);
-            GameObject go = Instantiate(SpawnObject, this.transform.position + new Vector3(0, y, 0), Quaternion.identity) as GameObject;
+            float z = Random.Range(-Scale, Scale) + Offset;
+            GameObject go = Instantiate(SpawnObject, transform.position + new Vector3(0, 0, z), Quaternion.identity) as GameObject;
         }
         Invoke("Spawn", Random.Range(timeMin, timeMax));
     }

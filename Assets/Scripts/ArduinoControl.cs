@@ -26,7 +26,7 @@ public class ArduinoControl : MonoBehaviour
     string ping_str;
     int ping;
     // Variable to hold vertical position of playerobject 
-    private float posy;
+    private float posz;
 
 
     private int avg_total;
@@ -47,8 +47,9 @@ public class ArduinoControl : MonoBehaviour
 
         deviceName = "RNBT-9BF1";
         // Set min and max of localized coordinates
-        screen_range_max = GameCamera.transform.position.y + (GameCamera.orthographicSize - 2 * transform.localScale.y);
-        screen_range_min = GameCamera.transform.position.y - (GameCamera.orthographicSize - 2 * transform.localScale.y);
+        //TODO: programatically replace hardcoded values
+        screen_range_max = 4f;
+        screen_range_min = -4f;
         // Setup orientation
         dir = RotationControl.Calibration.none;
         // Setup measurement averaging
@@ -89,11 +90,11 @@ public class ArduinoControl : MonoBehaviour
     {
         if (StateMachine.GameState())
         {
-            float vel = (posy - transform.position.y)/Time.deltaTime;
-            float newPosition = Mathf.SmoothDamp(transform.position.x, posy, ref vel, Time.deltaTime);
+            float vel = (posz - transform.position.y)/Time.deltaTime;
+            float newPosition = Mathf.SmoothDamp(transform.position.z, posz, ref vel, Time.deltaTime);
             //float newPosition = Mathf.SmoothDamp(transform.position.x, posy, ref Velocity, MoveTime);
             //float newPosition = Mathf.SmoothDamp(transform.position.x, posy, ref Velocity, MoveTime);
-            transform.position = new Vector3(transform.position.x, newPosition, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y, newPosition);
         }
     }
 
@@ -141,9 +142,9 @@ public class ArduinoControl : MonoBehaviour
                 // Confine new position to predefined min and max
                 ping = Math.Max(Math.Min(avg_ping, UpperLimitPing), LowerLimitPing);
                 // Translate to screen position
-                posy = map(ping, LowerLimitPing, UpperLimitPing, screen_range_min, screen_range_max);
+                posz = map(ping, LowerLimitPing, UpperLimitPing, screen_range_min, screen_range_max);
                 //posy = Mathf.Max(screen_range_min, posy);
-                posy_str = posy.ToString();
+                posy_str = posz.ToString();
             }
             // Reset values
             avg_cnt = avg_ping = avg_total = 0;

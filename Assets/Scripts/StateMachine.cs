@@ -27,7 +27,7 @@ public class StateMachine : MonoBehaviour
     // time it takes to move them off screen
     public float MoveTime = 0.5f;
     // destinatino offsets of the textboxes from their respective locaitons
-    public float DestinationOffset = 6f;
+    public float DestinationOffset;
 
     private GameMenu Interface;
 
@@ -50,6 +50,7 @@ public class StateMachine : MonoBehaviour
             LeftText.transform,
             RightText.transform,
             TopText.transform,
+            DestinationOffset,
             Velocity,
             MoveTime
             );
@@ -202,8 +203,6 @@ internal class GameMenu
 {
     // time it takes to move them off screen
     private float MoveTime = 0.5f;
-    // destinatino offsets of the textboxes from their respective locaitons
-    public float DestinationOffset = 6f;
     // Velocity of left textbox
     private float VelocityL;
     // Velocity of right textbox
@@ -227,19 +226,20 @@ internal class GameMenu
     private bool move_right = false;
     private bool move_top = false;
 
-    public GameMenu(Transform initial_location_left, Transform initial_location_right, Transform initial_location_top, float move_speed = 5.0f, float travel_time = 0.5f)
+    public GameMenu(Transform initial_location_left, Transform initial_location_right, Transform initial_location_top, float DestinationOffset = 6f, float move_speed = 5.0f, float travel_time = 0.5f)
     {
         PositionLeft = initial_location_left;
         PositionRight = initial_location_right;
         PositionTop = initial_location_top;
         // Save values of textboxes initial locations
-        initialLeft = initial_location_left.position;
-        initialRight = initial_location_right.position;
-        initialTop = initial_location_top.position;
+        initialLeft = initial_location_left.localPosition;
+        initialRight = initial_location_right.localPosition;
+        initialTop = initial_location_top.localPosition;
         // Get location coordinates of their offscreen positions
         destLeft = initialLeft.x - DestinationOffset;
         destRight = initialRight.x + DestinationOffset;
-        destTop = initialTop.y + DestinationOffset;
+        UnityEngine.Debug.Log(destRight);
+        destTop = initialTop.z - DestinationOffset;
         // Give all three velocities same initial value but will deviate when actually moving
         VelocityL = VelocityR = VelocityT = move_speed;
 
@@ -257,9 +257,9 @@ internal class GameMenu
     public void ShowMenu()
     {
         //Reset positions of textboxes
-        PositionLeft.position = initialLeft;
-        PositionRight.position = initialRight;
-        PositionTop.position = initialTop;
+        PositionLeft.localPosition = initialLeft;
+        PositionRight.localPosition = initialRight;
+        PositionTop.localPosition = initialTop;
     }
 
     public void MoveMenu()
@@ -267,12 +267,12 @@ internal class GameMenu
         if (move_left)
         {
             // Get new position for left text
-            float newLeftPosition = Mathf.SmoothDamp(PositionLeft.position.x, destLeft, ref VelocityL, MoveTime);
+            float newLeftPosition = Mathf.SmoothDamp(PositionLeft.localPosition.x, destLeft, ref VelocityL, MoveTime);
             //Move it
-            PositionLeft.position = new Vector3(newLeftPosition, PositionLeft.position.y, PositionLeft.position.z);
-            if (Mathf.Abs(PositionLeft.position.x - destLeft) < 0.01f)
+            PositionLeft.localPosition = new Vector3(newLeftPosition, PositionLeft.localPosition.y, PositionLeft.localPosition.z);
+            if (Mathf.Abs(PositionLeft.localPosition.x - destLeft) < 0.01f)
             {
-                PositionLeft.position = new Vector3(destLeft, PositionLeft.position.y, PositionLeft.position.z);
+                PositionLeft.localPosition = new Vector3(destLeft, PositionLeft.localPosition.y, PositionLeft.localPosition.z);
                 move_left = false;
             }
         }
@@ -280,11 +280,11 @@ internal class GameMenu
         if (move_right)
         {
             // Get new position for right text
-            float newRightPosition = Mathf.SmoothDamp(PositionRight.position.x, destRight, ref VelocityR, MoveTime);
-            PositionRight.position = new Vector3(newRightPosition, PositionRight.position.y, PositionRight.position.z);
-            if (destRight - PositionRight.position.x < 0.01f)
+            float newRightPosition = Mathf.SmoothDamp(PositionRight.localPosition.x, destRight, ref VelocityR, MoveTime);
+            PositionRight.localPosition = new Vector3(newRightPosition, PositionRight.localPosition.y, PositionRight.localPosition.z);
+            if (destRight - PositionRight.localPosition.x < 0.01f)
             {
-                PositionRight.position = new Vector3(destRight, PositionRight.position.y, PositionRight.position.z);
+                PositionRight.localPosition = new Vector3(destRight, PositionRight.localPosition.y, PositionRight.localPosition.z);
                 move_right = false;
             }
         }
@@ -292,11 +292,11 @@ internal class GameMenu
         if (move_top)
         {
             // get new position for top text
-            float newTopPosition = Mathf.SmoothDamp(PositionTop.position.y, destTop, ref VelocityT, MoveTime);
-            PositionTop.position = new Vector3(PositionTop.position.x, newTopPosition, PositionTop.position.z);
-            if (destTop - PositionTop.position.y < 0.01f)
+            float newTopPosition = Mathf.SmoothDamp(PositionTop.localPosition.z, destTop, ref VelocityT, MoveTime);
+            PositionTop.localPosition = new Vector3(PositionTop.localPosition.x, PositionTop.localPosition.y, newTopPosition);
+            if (Mathf.Abs(destTop - PositionTop.localPosition.z) < 0.01f)
             {
-                PositionTop.position = new Vector3(PositionTop.position.x, destTop, PositionTop.position.z);
+                PositionTop.localPosition = new Vector3(PositionTop.localPosition.x, PositionTop.localPosition.y, destTop);
                 move_top = false;
             }
         }

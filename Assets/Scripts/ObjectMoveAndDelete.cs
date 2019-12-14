@@ -7,7 +7,8 @@ public class ObjectMoveAndDelete: MonoBehaviour
 {
     public float Speed = 2.3f;
     public float MaxSpeed = 12f;
-    public float DeletionLocation = -8.0f;
+    // Make sure value is equal to the negative of the x position of the spawnpoint
+    public float DeletionLocation = -25.0f;
 
     private float actual_speed;
 

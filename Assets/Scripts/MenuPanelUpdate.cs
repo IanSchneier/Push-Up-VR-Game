@@ -15,6 +15,8 @@ public class MenuPanelUpdate : MonoBehaviour
 
     private float targetHeight;
 
+    private bool did = true;
+
     void Start()
     {
         Instruction = GetComponentInChildren<SpriteRenderer>();
@@ -25,14 +27,20 @@ public class MenuPanelUpdate : MonoBehaviour
     }
     public void InstructionComplete()
     {
-        Instruction.sprite = DoneSymbol;
-        float factor = Instruction.transform.localScale.y  * (targetHeight / DoneSymbol.rect.height);
-        Instruction.transform.localScale = new Vector3(factor,factor,factor);
+        if (did)
+        {
+            Instruction.sprite = DoneSymbol;
+            float factor = Instruction.transform.localScale.y * (targetHeight / DoneSymbol.rect.height);
+            Instruction.transform.localScale = new Vector3(factor, factor, factor);
+            did = false;
+        }
+        
     }
 
     public void InstructionReset()
     {
         Instruction.sprite = InitSymbol;
         Instruction.transform.localScale = InitScale;
+        did = true;
     }
 }

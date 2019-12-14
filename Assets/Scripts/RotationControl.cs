@@ -14,6 +14,8 @@ public class RotationControl : MonoBehaviour
 
     public GameObject TopText;
 
+    public GameObject Menu;
+
     // Flag to send calibrate signal (avoiding repeat calibrations)
     bool rotated = false;
     public enum Calibration {none, top, bottom};
@@ -23,9 +25,12 @@ public class RotationControl : MonoBehaviour
     public GameObject MainStateMachine;
     // Pointer to state machine script
     private StateMachine GameState;
-    private string debug;
+
+    private Pointer point;
+
     void Start()
     {
+        point = new Pointer(GetComponent<LineRenderer>());
         // Connect to statemachine
         GameState = MainStateMachine.GetComponent<StateMachine>();
         CalibrationMode = Calibration.none;
@@ -36,19 +41,25 @@ public class RotationControl : MonoBehaviour
     void Update()
     {
         RaycastHit hit;
+
+        //float y_rot = gameObject.GetComponent<Camera>().transform.eulerAngles.y;
+        //Menu.transform.eulerAngles.SetY(y_rot);
+
+
         if (StateMachine.GameState())
         {
-
+            point.Dim();
         }
         else
         {
+            point.Show();
+
             if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity, targetLayer))
             {
                 if (hit.collider.gameObject == LeftText && !rotated)
                 {
                     LeftText.GetComponent<MenuPanelUpdate>().InstructionComplete();
                     // Set calibration mode to set the lower limit
-                    debug = "callibrating left";
                     CalibrationMode = Calibration.bottom;
                     // Set flag to prevent repeat calibrations
                     rotated = true;
@@ -58,15 +69,15 @@ public class RotationControl : MonoBehaviour
                     RightText.GetComponent<MenuPanelUpdate>().InstructionComplete();
                     // Set calibration mode to set the upper limit
                     CalibrationMode = Calibration.top;
-                    debug = "callibrating right";
                     // Set flag to prevent repeat calibrations
                     rotated = true;
                 }
                 else if (hit.collider.gameObject == TopText && !rotated)
                 {
+                    // Hide Line renderer
+                    point.StartDim();
                     // Change state to begin playing the game
                     GameState.StartGame();
-                    debug = "starting game";
                     // Set flag to prevent game starting again
                     rotated = true;
                 }
@@ -74,50 +85,49 @@ public class RotationControl : MonoBehaviour
             else
                 rotated = false;
         }
-        
-
-
-        /*if ((Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity, targetLayer)) && !rotated)
-        {
-            if (hit.collider.gameObject.tag == "MenuLeft")
-            {
-                //LeftText.GetComponent<TextUpdate>().InstructionComplete();
-                // Set calibration mode to set the lower limit
-                debug = "callibrating left";
-                CalibrationMode = Calibration.bottom;
-                // Set flag to prevent repeat calibrations
-                rotated = true;
-            }
-            else if(hit.collider.gameObject.tag == "MenuRight")
-            {
-                //RightText.GetComponent<TextUpdate>().InstructionComplete();
-                // Set calibration mode to set the upper limit
-                CalibrationMode = Calibration.top;
-                debug = "callibrating right";
-                // Set flag to prevent repeat calibrations
-                rotated = true;
-            }
-            else if(hit.collider.gameObject.tag == "MenuTop")
-            {
-                // Change state to begin playing the game
-                GameState.StartGame();
-                debug = "starting game";
-                // Set flag to prevent game starting again
-                rotated = true;
-            }
-        }*/
     }
 
-    void OnGUI()
+    internal class Pointer
     {
-        int w = Screen.width, h = Screen.height;
+        private float WidthLossPerSecond = 0.0001f;
+        // Flag to dim the line renderer
+        private bool dim = false;
+        private LineRenderer LR;
+        // Original width
+        private float OGwidth;
+        public Pointer(LineRenderer lr, float dr = 0.01f)
+        {
+            LR = lr;
+            WidthLossPerSecond = dr;
+            OGwidth = LR.widthMultiplier;
+            LR.enabled = true;
+        }
 
-        GUIStyle style = new GUIStyle();
+        public void Show()
+        {
+            LR.enabled = true;
+            LR.widthMultiplier = OGwidth;
+        }
 
-        style.alignment = TextAnchor.UpperLeft;
-        style.fontSize = h * 2 / 50;
-        style.normal.textColor = new Color(0.1942594f, 1.0f, 0.0f, 1.0f);
+        public void StartDim()
+        {
+            dim = true;
+        }
 
-        GUI.Label(new Rect(w >> 1, h * 1 / 3, w, h * 2 / 100), debug, style);
+        public void Dim()
+        {
+            if (dim)
+            {
+                LR.widthMultiplier -= WidthLossPerSecond;
+                //CG.alpha -= AlphaLossPerSecond;
+                if (LR.widthMultiplier <= 0)
+                {
+                    LR.widthMultiplier = 0;
+                    LR.enabled = false;
+                    dim = false;
+                }
+            }
+        }
     }
 }
+
