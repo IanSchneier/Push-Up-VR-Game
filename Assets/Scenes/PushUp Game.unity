@@ -529,7 +529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afc7aa61fd5f5c54c88939c1fe60c0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FlashEffectDecay: 0.01
+  FlashEffectDecay: 0.05
   PlayerObject: {fileID: 2265607240334174964}
   LeftText: {fileID: 644931593}
   RightText: {fileID: 809345695}

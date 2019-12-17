@@ -11,7 +11,6 @@ ScriptsOnlyBuild:
     - StateMachine
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
-    - UnityEditor.TestTools.TestRunner.TestListCacheData
     UnityEngine.UI.dll:
     - UnityEngine.EventSystems.EventSystem
     - UnityEngine.EventSystems.StandaloneInputModule
@@ -75,11 +74,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10884}
     - Class: 114
-      Script: {instanceID: 11402}
+      Script: {instanceID: 11398}
     - Class: 114
-      Script: {instanceID: 11418}
+      Script: {instanceID: 11414}
     - Class: 114
-      Script: {instanceID: 11722}
+      Script: {instanceID: 11718}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 120
@@ -529,12 +528,6 @@ ScriptsOnlyBuild:
     className: PostEffectsHelper
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: ObjectRemove
-  - hash:
-      serializedVersion: 2
       Hash: 1a9e52e2ff472238deaebe06595ba637
     assemblyName: Assembly-CSharp.dll
     namespaceName: UnityStandardAssets.ImageEffects
@@ -617,12 +610,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextMeshProUGUI
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: CameraControl
   - hash:
       serializedVersion: 2
       Hash: 09e1b6be927202a5d2069aecccc84a2a
@@ -839,36 +826,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp-firstpass.dll
-    namespaceName: 
-    className: SampleInfo
-  - hash:
-      serializedVersion: 2
-      Hash: 02493766ba0d073bd9e5d602a5878d4f
-    assemblyName: Assembly-CSharp-firstpass.dll
-    namespaceName: 
-    className: iTween
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp-firstpass.dll
-    namespaceName: 
-    className: MoveSample
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp-firstpass.dll
-    namespaceName: 
-    className: RotateSample
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: MenuRotate
   platform: 13
   scenePathNames:
   - Assets/Scenes/PushUp Game.unity
